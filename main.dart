@@ -1,63 +1,83 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ProfileScreen(),
+      home: AgeCheckerScreen(),
     );
   }
 }
 
-class ProfileScreen extends StatelessWidget {
+class AgeCheckerScreen extends StatefulWidget {
+  @override
+  _AgeCheckerScreenState createState() => _AgeCheckerScreenState();
+}
+
+class _AgeCheckerScreenState extends State<AgeCheckerScreen> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  String result = "";
+
+  void checkAge() {
+    String name = _nameController.text;
+    int? age = int.tryParse(_ageController.text);
+    if (age == null || name.isEmpty) {
+      setState(() {
+        result = "Vui lòng nhập đầy đủ và chính xác thông tin";
+      });
+      return;
+    }
+
+    String category;
+    if (age > 65) {
+      category = "Người già";
+    } else if (age >= 6) {
+      category = "Người lớn";
+    } else if (age >= 2) {
+      category = "Trẻ em";
+    } else {
+      category = "Em bé";
+    }
+
+    setState(() {
+      result = "$name thuộc nhóm: $category";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
-      body: SafeArea(
+      appBar: AppBar(title: Text("KIỂM TRA TUỔI")),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Row chứa 2 icon trên cùng
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 10.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Icon(Icons.arrow_back, size: 30),
-                  Icon(Icons.edit, size: 30),
-                ],
-              ),
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(labelText: "Họ và tên"),
             ),
-            const Spacer(), // Đẩy nội dung xuống giữa màn hình
-            // Avatar
-            const CircleAvatar(
-              radius: 60,
-              backgroundImage: NetworkImage('https://i.imgur.com/vwK1GBu.png'),
-              backgroundColor: Colors.blue,
+            TextField(
+              controller: _ageController,
+              decoration: InputDecoration(labelText: "Tuổi"),
+              keyboardType: TextInputType.number,
             ),
-            const SizedBox(height: 20),
-            // Tên
-            const Text(
-              'Pham Quoc KhanhKhanh',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: checkAge,
+              child: Text("Kiểm tra"),
             ),
-            const SizedBox(height: 5),
-            // Địa chỉ
-            const Text(
-              'Ho Chi Minh, VN',
-              style: TextStyle(fontSize: 16, color: Colors.black54),
+            SizedBox(height: 20),
+            Text(
+              result,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const Spacer(),
           ],
         ),
       ),
