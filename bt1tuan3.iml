@@ -1,14 +1,154 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
-    <exclude-output />
-    <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/.dart_tool" />
-      <excludeFolder url="file://$MODULE_DIR$/.pub" />
-      <excludeFolder url="file://$MODULE_DIR$/build" />
-    </content>
-    <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Dart SDK" level="project" />
-    <orderEntry type="library" name="Dart Packages" level="project" />
-  </component>
-</module>
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: WelcomeScreen(),
+    );
+  }
+}
+
+// Trang chào mừng
+class WelcomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.network(
+              'https://i.imgur.com/Lp2BEHK.png',
+              width: 100,
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Jetpack Compose",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                "Jetpack Compose is a modern UI toolkit for building native Android applications using a declarative programming approach.",
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(height: 40),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ComponentsListScreen()),
+                );
+              },
+              child: Text("I'm ready", style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Trang danh sách thành phần UI
+class ComponentsListScreen extends StatelessWidget {
+  final List<Map<String, String>> components = [
+    {"title": "Display", "subtitle": ""},
+    {"title": "Text", "subtitle": "Displays text"},
+    {"title": "Image", "subtitle": "Displays an image"},
+    {"title": "Input", "subtitle": ""},
+    {"title": "TextField", "subtitle": "Input field for text"},
+    {"title": "PasswordField", "subtitle": "Input field for passwords"},
+    {"title": "Layout", "subtitle": ""},
+    {"title": "Column", "subtitle": "Arranges elements vertically"},
+    {"title": "Row", "subtitle": "Arranges elements horizontally"},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "UI Components List",
+          style: TextStyle(color: Color(0xFF2196F3)), // Đổi màu chữ
+        ),
+        backgroundColor: Colors.white, // Nền trắng
+        automaticallyImplyLeading: false, // Ẩn nút back
+      ),
+      body: ListView.builder(
+        padding: EdgeInsets.all(16),
+        itemCount: components.length,
+        itemBuilder: (context, index) {
+          return components[index]['subtitle']!.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    components[index]['title']!,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                )
+              : GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TextDetailScreen()),
+                    );
+                  },
+                  child: Card(
+                    color: Colors.blue[100],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ListTile(
+                      title: Text(components[index]['title']!,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Text(components[index]['subtitle']!),
+                    ),
+                  ),
+                );
+        },
+      ),
+    );
+  }
+}
+
+// Trang chi tiết văn bản
+class TextDetailScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Text Detail",
+          style: TextStyle(color: Color(0xFF2196F3)), // Đổi màu chữ
+        ),
+        backgroundColor: Colors.white, // Nền trắng
+        iconTheme: IconThemeData(color: Color(0xFF2196F3)), // Màu icon back
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Image.network(
+            "https://i.imgur.com/xs3mQwK.png",
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
+    );
+  }
+}
